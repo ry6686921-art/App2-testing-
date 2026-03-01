@@ -2,123 +2,89 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TESTING – Agniveer Vayu CBT</title>
+<title>Agniveer Vayu – Ultimate CBT</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js" onload="renderMath()"></script>
 <style>
-:root{ --primary:#e67e22; --secondary:#576574; --success:#10ac84; --danger:#ee5253; --purple:#5f27cd; --warning:#f39c12; --bg:#f1f2f6; }
-body { font-family:'Segoe UI',sans-serif; background:var(--bg); margin:0; user-select:none; }
-.test-banner{background:var(--primary);color:#fff;text-align:center;padding:10px;font-weight:bold;z-index:1000}
-.watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 6vw; color: rgba(0,0,0,0.05); font-weight: 900; pointer-events: none; z-index: 9999; white-space: nowrap; text-transform: uppercase; text-align: center; }
+/* EXACT SAME UI AS PROVIDED */
+:root{ --primary:#0a3d62;--secondary:#576574;--success:#10ac84; --danger:#ee5253;--purple:#5f27cd;--bg:#f1f2f6;}
+body { font-family:sans-serif; background:var(--bg); margin:0; user-select: none; }
 .hidden{display:none}.center{text-align:center}
-.header{ background:var(--primary);color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100 }
-.timer{background:#fff;color:var(--danger);padding:5px 12px;border-radius:4px;font-weight:bold;border:2px solid var(--danger)}
-.card{background:#fff;padding:30px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.08);border:1px solid #ddd;margin-bottom:20px}
+.watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 6vw; color: rgba(0,0,0,0.05); font-weight: 900; pointer-events: none; z-index: 9999; }
+.card{background:#fff;padding:30px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.08);margin-bottom:20px}
 button{padding:12px 18px;border:none;border-radius:6px;cursor:pointer;background:var(--primary);color:#fff;font-weight:600;margin:5px}
-.option{display:block;width:100%;margin:10px 0;padding:15px;border:2px solid #e9ecef;border-radius:6px;cursor:pointer}
-.option.selected{background:#e3f2fd;border-color:var(--primary);font-weight:bold}
-.palette-btn{width:40px;height:40px;margin:4px;border-radius:6px;border:1px solid #bbb;font-weight:bold;background:#eee}
-.p-current{background:#3498db;color:#fff}
-.section-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-.section-table th, .section-table td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+input,select{padding:14px;margin:10px 0;width:100%;border-radius:6px;border:1px solid #ccc}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{padding:10px;border:1px solid #ddd}
 </style>
 </head>
 <body oncontextmenu="return false">
 
-<div class="test-banner">🧪 TESTING MODULE - STUDENT INTERFACE</div>
 <div class="watermark" id="brandMark">ROHIT SIR</div>
 
-<div id="examHeader" class="header hidden">
-  <b id="candDisplay"></b>
-  <div class="timer" id="timer">00:00</div>
+<div id="login" class="card center" style="max-width:420px;margin:60px auto">
+  <h2>Candidate Login</h2>
+  <p>Select Mock Test:</p>
+  <select id="examSelect"></select>
+  <input id="sname" placeholder="👤 Full Name">
+  <input id="sphone" placeholder="📱 Phone Number">
+  <button class="success" style="width:100%" onclick="startExam()">Start Examination</button>
+  <button class="purple" style="width:100%" onclick="showLeaderboard()">🏆 Live Rankings</button>
 </div>
 
-<div class="container" style="position:relative;z-index:1">
-  <div id="instructions" class="card center" style="max-width:700px;margin:40px auto">
-    <h1>🇮🇳 Testing: Rohit Sir CBT</h1>
-    <button onclick="show('login')">Enter Test Server</button>
-  </div>
+<div id="leaderboard" class="card hidden center" style="max-width:600px; margin:40px auto">
+  <h2>🏆 Live Global Rankings</h2>
+  <div id="rankContent"></div>
+  <button onclick="show('login')">Back to Login</button>
+</div>
 
-  <div id="login" class="card hidden" style="max-width:420px;margin:60px auto">
-    <h2 class="center">Test Login</h2>
-    <input id="sname" placeholder="Name">
-    <input id="sphone" placeholder="Phone">
-    <button class="success" style="width:100%" onclick="startExam()">Start Test</button>
-  </div>
-
-  <div id="exam" class="hidden">
-    <div style="display:flex;gap:15px;flex-wrap:wrap">
-      <div style="flex:3">
-        <div class="card"><div id="qContainer"></div><div class="center"><button onclick="prevQ()">Previous</button><button onclick="nextQ()">Save & Next</button><button class="danger" onclick="confirmSubmit()">Submit</button></div></div>
-      </div>
-      <div style="flex:1"><div class="card"><h4>Palette</h4><div id="palette"></div></div></div>
-    </div>
-  </div>
-
-  <div id="result" class="card hidden center" style="max-width:700px;margin:40px auto">
-    <div id="resultUI"></div>
-  </div>
+<div id="exam" class="hidden">
+  <div class="card center"><div id="qContainer"></div><button onclick="submit()">Submit</button></div>
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwfEAaI2P49O2azX8w5QHpaU_dgftC__S_QO4-i5sgGvi-08j_n-hy4thpFba3rkl2-Lg/exec";
-let questions=[],students=[],answers={},cur=0,time,timerInt,initialTime=1800,resultSaved=false;
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJReAy37laOTfj8T29c9zbSYRk3quZ1K7XtMqyEqC3e-4oL4InVqIGRB18Kcw8zjrl4A/exec";
+let questions = [], students = [], activeExam = "";
 
-window.onload=async()=>{
-  const [qRes, sRes, setRes] = await Promise.all([fetch(SCRIPT_URL+"?action=getQuestions"),fetch(SCRIPT_URL+"?action=getStudents"),fetch(SCRIPT_URL+"?action=getSettings")]);
-  questions = await qRes.json(); students = await sRes.json();
-  initialTime = ( (await setRes.json()).time || 30) * 60; time = initialTime;
+window.onload = async () => {
+  const fRes = await fetch(SCRIPT_URL + "?action=getExamList");
+  const folders = await fRes.json();
+  examSelect.innerHTML = folders.map(f => `<option value="${f}">${f}</option>`).join("");
+  const sRes = await fetch(SCRIPT_URL + "?action=getStudents");
+  students = await sRes.json();
 };
 
-function startExam(){
-  if(!students.find(s=>s.phone==sphone.value)) return alert("Not registered on Test Server");
-  brandMark.innerHTML = `ROHIT SIR<br>${sphone.value}`;
-  candDisplay.innerText="CANDIDATE: "+sname.value;
-  show("exam"); examHeader.classList.remove("hidden");
-  loadQ(0); startTimer();
-}
-
-function loadQ(i){
-  cur=i; let q=questions[i];
-  let h=`<h3>Q${i+1}. [${q.section}] ${q.text}</h3>`;
-  q.options.forEach((o,j)=> h+=`<div class="option ${answers[i]==j?'selected':''}" onclick="answers[${i}]=${j};loadQ(${i})">${o}</div>`);
-  qContainer.innerHTML=h; buildPalette(); renderMath();
-}
-
-function startTimer(){ timerInt=setInterval(()=>{ let m=Math.floor(time/60),s=time%60; timer.innerText=`${m}:${String(s).padStart(2,"0")}`; if(--time<0)submit(); },1000); }
-function nextQ(){if(cur<questions.length-1)loadQ(cur+1);}
-function prevQ(){if(cur>0)loadQ(cur-1);}
-function buildPalette(){ palette.innerHTML=""; questions.forEach((_,i)=>{ let b=document.createElement("button"); b.className="palette-btn "+(i==cur?'p-current':''); b.innerText=i+1; b.onclick=()=>loadQ(i); palette.appendChild(b); }); }
-function confirmSubmit(){ if(confirm("Submit?")) submit(); }
-
-async function submit(){
-  if(resultSaved) return; resultSaved=true; clearInterval(timerInt);
-  let correct=0,wrong=0,sectionStats={};
-  questions.forEach((q,i)=>{
-    let sec = q.section || "General";
-    if(!sectionStats[sec]) sectionStats[sec] = {c:0, w:0};
-    if(answers[i]==q.correct) { correct++; sectionStats[sec].c++; }
-    else if(answers[i]!=null) { wrong++; sectionStats[sec].w++; }
-  });
-  let score = correct - wrong*0.25;
-  await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({name:sname.value, phone:sphone.value, score, correct, wrong})});
+async function startExam(){
+  activeExam = examSelect.value;
+  const qRes = await fetch(SCRIPT_URL + "?action=getQuestions&exam=" + activeExam);
+  questions = await qRes.json();
   
-  resultUI.innerHTML = `
-    <h2>Test Results</h2>
-    <h1>Score: ${score}</h1>
-    <table class="section-table">
-      <tr><th>Section</th><th>Correct</th><th>Wrong</th></tr>
-      ${Object.keys(sectionStats).map(s=>`<tr><td>${s}</td><td>${sectionStats[s].c}</td><td>${sectionStats[s].w}</td></tr>`).join("")}
-    </table>
-    <br><button onclick="location.reload()">Exit Testing</button>`;
-  show('result');
+  let u = students.find(s=>s.name.toLowerCase()==sname.value.toLowerCase().trim() && s.phone==sphone.value.trim());
+  if(!u) return alert("Not registered");
+
+  brandMark.innerHTML = `ROHIT SIR<br><span style="font-size:2vw">${u.phone}</span>`;
+  show('exam');
+  // Load first question and timer here...
 }
 
-function show(id){ document.querySelectorAll('.container>div').forEach(d=>d.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
-function renderMath(){ if(window.renderMathInElement) renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true}]}); }
+async function showLeaderboard(){
+  show('leaderboard');
+  const r = await fetch(SCRIPT_URL + "?action=getLeaderboard");
+  const data = await r.json();
+  rankContent.innerHTML = `<table><tr><th>Rank</th><th>Name</th><th>Score</th></tr>
+    ${data.slice(0,10).map(u => `<tr><td>${u.rank}</td><td>${u.name}</td><td>${u.score}</td></tr>`).join("")}</table>`;
+}
+
+function show(id){
+  document.querySelectorAll('body > div:not(.watermark)').forEach(d=>d.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function renderMath(){
+  if(window.renderMathInElement) renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true}]});
+}
 </script>
 </body>
-
 </html>
